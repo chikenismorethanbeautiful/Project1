@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>峰学未来 · 智慧伴学</title>
+    {% load static %}
+</head>
+<body>
+
+<style>
+/* 顶部导航栏 - 固定高度 */
+.global-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 56px;
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+/* 品牌区域 */
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.nav-brand-icon {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+.nav-brand-text h1 {
+    font-size: 1rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff, #a8c0ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+}
+.nav-brand-text p {
+    font-size: 0.55rem;
+    opacity: 0.7;
+    color: white;
+    margin: 0;
+}
+
+/* 右侧操作区 */
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* 通用按钮 */
+.nav-btn {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    line-height: 1.2;
+}
+.nav-btn:hover {
+    background: rgba(255,255,255,0.2);
+}
+
+/* 状态标签 */
+.status-badge {
+    background: rgba(46, 125, 100, 0.2);
+    padding: 5px 12px;
+    border-radius: 30px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+}
+.online-dot {
+    width: 7px;
+    height: 7px;
+    background: #4ade80;
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.2); }
+}
+
+/* 用户菜单 */
+.user-menu {
+    position: relative;
+}
+.user-menu-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 3px 10px 3px 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 30px;
+    cursor: pointer;
+}
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(102, 126, 234, 0.5);
+    background: #2d2d44;
+}
+.user-name {
+    color: white;
+    font-size: 12px;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.dropdown-arrow {
+    font-size: 9px;
+    color: rgba(255,255,255,0.6);
+}
+.user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background: rgba(30, 30, 47, 0.98);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    min-width: 140px;
+    overflow: hidden;
+    z-index: 1000;
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.dropdown-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #e8e8f0;
+}
+.dropdown-item:hover {
+    background: rgba(102, 126, 234, 0.2);
+}
+.dropdown-item.logout {
+    color: #f87171;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* 弹窗样式 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-container {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    border: 1px solid rgba(255,255,255,0.08);
+    box-shadow: 0 20px 35px rgba(0,0,0,0.3);
+}
+.modal-container.small {
+    max-width: 340px;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.modal-header h3 {
+    margin: 0;
+    font-size: 17px;
+    color: white;
+}
+.modal-close {
+    font-size: 24px;
+    cursor: pointer;
+    color: rgba(255,255,255,0.5);
+}
+.modal-body {
+    padding: 20px;
+}
+.modal-footer {
+    padding: 12px 20px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+.settings-row {
+    margin-bottom: 16px;
+}
+.settings-row label {
+    display: block;
+    font-size: 12px;
+    margin-bottom: 6px;
+    color: rgba(255,255,255,0.6);
+}
+.settings-avatar-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 12px;
+    border: 2px solid #667eea;
+    object-fit: cover;
+    background: #2d2d44;
+}
+.settings-input {
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    font-size: 14px;
+    color: white;
+}
+.settings-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+body {
+    padding-top: 56px !important;
+}
+
+/* ========== 移动端专用样式 ========== */
+@media (max-width: 768px) {
+    .global-navbar {
+        padding: 0 12px;
+        height: 56px;
+    }
+    /* 移动端隐藏品牌区域 */
+    .nav-brand-icon, .nav-brand-text {
+        display: none;
+    }
+    /* 声音按钮胶囊样式 */
+    .nav-btn {
+        padding: 5px 12px !important;
+        width: auto !important;
+        height: auto !important;
+        border-radius: 30px !important;
+        font-size: 13px !important;
+        background: rgba(255,255,255,0.15);
+        gap: 4px;
+        line-height: 1.2;
+    }
+    .nav-btn span {
+        display: inline-block !important;
+        line-height: 1.3;
+    }
+    /* 隐藏AI在线状态 */
+    .status-badge {
+        display: none !important;
+    }
+    /* 用户菜单简化圆形头像 */
+    .user-name, .dropdown-arrow {
+        display: none !important;
+    }
+    .user-menu-trigger {
+        padding: 3px !important;
+        border-radius: 50% !important;
+        background: rgba(255,255,255,0.15);
+    }
+    .user-avatar {
+        width: 32px !important;
+        height: 32px !important;
+        margin: 0 !important;
+    }
+
+    /* ===== 移动端弹窗修复：按钮完美居中 ===== */
+    .modal-container {
+        width: 90%;
+        max-width: 360px;
+        margin: 0 16px;
+    }
+    .modal-header h3 {
+        font-size: 16px;
+    }
+    .modal-body {
+        padding: 18px 16px;
+    }
+
+    /* 修复弹窗底部按钮偏左问题 - 强制居中对齐 */
+    .modal-footer {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 12px;
+        padding: 12px 16px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* 两个按钮等宽，完美居中 */
+    .modal-footer .nav-btn {
+        flex: 1;
+        max-width: 120px;
+        min-width: 100px;
+        justify-content: center;
+        text-align: center;
+        font-size: 14px !important;
+        padding: 8px 0 !important;
+        margin: 0;
+        white-space: nowrap;
+        line-height: 1.4;
+        border-radius: 40px !important;
+        box-sizing: border-box;
+    }
+
+    /* 修改密码弹窗底部同样处理 */
+    #passwordModal .modal-footer {
+        justify-content: center !important;
+    }
+
+    #passwordModal .modal-footer .nav-btn {
+        flex: 1;
+        max-width: 120px;
+        min-width: 100px;
+        justify-content: center;
+        margin: 0;
+    }
+
+    /* 设置弹窗内的修改密码按钮样式优化 */
+    #changePasswordBtn {
+        font-size: 13px !important;
+        padding: 8px 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 上传头像按钮移动端适配 */
+    #uploadAvatarBtn {
+        padding: 5px 12px !important;
+        font-size: 12px;
+    }
+
+    .settings-input {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+    .settings-row label {
+        font-size: 11px;
+    }
+    .settings-avatar-img {
+        width: 56px;
+        height: 56px;
+    }
+}
+</style>
+
+<!-- 导航栏HTML -->
+<div class="global-navbar" id="globalNavbar">
+    <div class="nav-brand">
+        <div class="nav-brand-icon">📘</div>
+        <div class="nav-brand-text">
+            <h1>峰学未来 · 智慧伴学</h1>
+            <p>张雪峰风格AI · 志愿填报专家</p>
+        </div>
+    </div>
+    <div class="nav-actions">
+        <button class="nav-btn" id="muteBtn"><span>🔊 声音开启</span></button>
+        <div class="status-badge"><span class="online-dot"></span><span>AI 在线</span></div>
+        <div class="user-menu" id="userMenu" style="display: none;">
+            <div class="user-menu-trigger" id="userMenuTrigger">
+                <img class="user-avatar" id="userAvatar" src="" alt="头像">
+                <span class="user-name" id="userName"></span>
+                <span class="dropdown-arrow">▼</span>
+            </div>
+            <div class="user-dropdown" id="userDropdown" style="display: none;">
+                <div class="dropdown-item" id="settingsBtn">⚙️ 个人设置</div>
+                <div class="dropdown-item logout" id="logoutBtn">🚪 退出登录</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 设置弹窗 -->
+<div class="modal-overlay" id="settingsModal" style="display: none;">
+    <div class="modal-container">
+        <div class="modal-header"><h3>个人设置</h3><span class="modal-close" id="closeSettingsModal">&times;</span></div>
+        <div class="modal-body">
+            <div class="settings-row" style="text-align: center;">
+                <img id="settingsAvatar" class="settings-avatar-img" src="" alt="头像预览">
+                <br>
+                <input type="file" id="avatarUpload" accept="image/jpeg,image/png,image/gif,image/webp" style="display: none;">
+                <button class="nav-btn" id="uploadAvatarBtn" style="background: #667eea; color: white; padding: 6px 16px;">更换头像</button>
+            </div>
+            <div class="settings-row"><label>昵称</label><input type="text" id="settingsNickname" class="settings-input" placeholder="输入昵称"></div>
+            <div class="settings-row"><label>手机号</label><input type="text" id="settingsPhone" class="settings-input" readonly disabled></div>
+            <div class="settings-row"><button class="nav-btn" id="changePasswordBtn" style="background: #667eea; color: white; width: 100%;">修改密码</button></div>
+        </div>
+        <div class="modal-footer">
+            <button class="nav-btn" id="cancelSettings" style="background: rgba(255,255,255,0.1);">取消</button>
+            <button class="nav-btn" id="saveSettings" style="background: #667eea;">保存</button>
+        </div>
+    </div>
+</div>
+
+<!-- 修改密码弹窗 -->
+<div class="modal-overlay" id="passwordModal" style="display: none;">
+    <div class="modal-container small">
+        <div class="modal-header"><h3>修改密码</h3><span class="modal-close" id="closePasswordModal">&times;</span></div>
+        <div class="modal-body">
+            <input type="password" id="oldPassword" class="settings-input" placeholder="原密码" style="margin-bottom: 12px;">
+            <input type="password" id="newPassword" class="settings-input" placeholder="新密码（不少于6位）" style="margin-bottom: 12px;">
+            <input type="password" id="confirmNewPassword" class="settings-input" placeholder="确认新密码">
+        </div>
+        <div class="modal-footer">
+            <button class="nav-btn" id="cancelPassword" style="background: rgba(255,255,255,0.1);">取消</button>
+            <button class="nav-btn" id="savePassword" style="background: #667eea;">确认</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ---------- 默认头像（data:svg 优雅圆脸图标）----------
+const DEFAULT_AVATAR_URL = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23667eea'/%3E%3Cstop offset='100%25' stop-color='%23764ba2'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='50' fill='url(%23grad)'/%3E%3Ctext x='50' y='70' font-size='44' text-anchor='middle' fill='%23ffffff' font-family='Arial, sans-serif' dy='.3em'%3E📘%3C/text%3E%3C/svg%3E";
+
+// 全局辅助函数：设置头像并确保加载失败回退默认头像
+function setImageWithDefault(imgElement, url) {
+    if (!imgElement) return;
+    if (!url || url === '' || url === 'null' || url === 'undefined') {
+        imgElement.src = DEFAULT_AVATAR_URL;
+    } else {
+        imgElement.src = url;
+    }
+    imgElement.onerror = function() {
+        if (imgElement.src !== DEFAULT_AVATAR_URL) {
+            imgElement.src = DEFAULT_AVATAR_URL;
+        }
+        imgElement.onerror = null;
+    };
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.addEventListener('error', function(e) {
+        let target = e.target;
+        if (target.tagName === 'IMG' && (target.classList.contains('user-avatar') || target.classList.contains('settings-avatar-img'))) {
+            if (target.src !== DEFAULT_AVATAR_URL) {
+                target.src = DEFAULT_AVATAR_URL;
+            }
+            e.stopPropagation();
+        }
+    }, true);
+});
+
+function getCSRFToken() {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, 10) === 'csrftoken=') {
+                cookieValue = decodeURIComponent(cookie.substring(10));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function showToast(msg) {
+    let toast = document.createElement('div');
+    toast.textContent = msg;
+    toast.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);color:white;padding:8px 20px;border-radius:40px;font-size:13px;z-index:10001;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis;';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+}
+
+let currentUser = null;
+
+function updateMuteButtonUI(btn, isMuted) {
+    const span = btn.querySelector('span');
+    if (span) {
+        if (window.innerWidth <= 768) {
+            span.innerHTML = isMuted ? '🔇 静音' : '🔊 声音';
+        } else {
+            span.innerHTML = isMuted ? '🔇 静音中' : '🔊 声音开启';
+        }
+    }
+}
+
+async function saveMuteStatusToDB(isMuted) {
+    try {
+        await fetch('/api/save-mute-status/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
+            body: JSON.stringify({ is_muted: isMuted })
+        });
+    } catch(e) { console.error(e); }
+}
+
+async function loadMuteStatusFromDB() {
+    try {
+        const res = await fetch('/api/get-mute-status/');
+        const data = await res.json();
+        return data.is_muted === true;
+    } catch(e) { return false; }
+}
+
+async function checkLogin() {
+    let res = await fetch('/auth/check/');
+    let data = await res.json();
+    if (data.is_authenticated) {
+        currentUser = data.user;
+        window.currentUser = currentUser;
+        document.getElementById('userMenu').style.display = 'block';
+        let avatarUrl = currentUser.avatar_url || '';
+        setImageWithDefault(document.getElementById('userAvatar'), avatarUrl);
+        document.getElementById('userName').textContent = currentUser.nickname || currentUser.username;
+        if (window.chatApp && window.chatApp.updateUserAvatars) window.chatApp.updateUserAvatars();
+    }
+}
+
+async function loadSettings() {
+    let res = await fetch('/auth/profile/');
+    let data = await res.json();
+    if (data.success) {
+        let avatar = data.user.avatar_url || '';
+        setImageWithDefault(document.getElementById('settingsAvatar'), avatar);
+        document.getElementById('settingsNickname').value = data.user.nickname || '';
+        document.getElementById('settingsPhone').value = data.user.phone || '';
+    }
+}
+
+async function saveSettings() {
+    let nickname = document.getElementById('settingsNickname').value;
+    let res = await fetch('/auth/profile/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
+        body: JSON.stringify({ nickname })
+    });
+    let data = await res.json();
+    if (data.success) {
+        showToast('保存成功');
+        document.getElementById('settingsModal').style.display = 'none';
+        document.getElementById('userName').textContent = nickname || currentUser.username;
+        if (window.currentUser) window.currentUser.nickname = nickname;
+    } else showToast('保存失败');
+}
+
+async function uploadAvatar(file) {
+    let formData = new FormData();
+    formData.append('avatar', file);
+    let res = await fetch('/auth/upload-avatar/', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': getCSRFToken() },
+        body: formData
+    });
+    let data = await res.json();
+    if (data.success) {
+        let newAvatarUrl = data.avatar_url;
+        if (window.currentUser) window.currentUser.avatar_url = newAvatarUrl;
+        setImageWithDefault(document.getElementById('userAvatar'), newAvatarUrl);
+        setImageWithDefault(document.getElementById('settingsAvatar'), newAvatarUrl);
+        if (window.chatApp && window.chatApp.updateUserAvatars) window.chatApp.updateUserAvatars();
+        showToast('头像上传成功');
+    } else showToast(data.error || '上传失败');
+}
+
+async function changePassword() {
+    let oldPwd = document.getElementById('oldPassword').value;
+    let newPwd = document.getElementById('newPassword').value;
+    let confirmPwd = document.getElementById('confirmNewPassword').value;
+    if (!oldPwd || !newPwd) { showToast('请填写完整'); return; }
+    if (newPwd.length < 6) { showToast('新密码不少于6位'); return; }
+    if (newPwd !== confirmPwd) { showToast('两次密码不一致'); return; }
+    let res = await fetch('/auth/change-password/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCSRFToken() },
+        body: JSON.stringify({ old_password: oldPwd, new_password: newPwd, confirm_password: confirmPwd })
+    });
+    let data = await res.json();
+    if (data.success) {
+        showToast('密码修改成功');
+        document.getElementById('passwordModal').style.display = 'none';
+        document.getElementById('oldPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmNewPassword').value = '';
+    } else showToast(data.error || '修改失败');
+}
+
+function logout() {
+    fetch('/auth/logout/', { method: 'POST', headers: { 'X-CSRFToken': getCSRFToken() } })
+        .then(() => window.location.href = '/');
+}
+
+window.addEventListener('resize', () => {
+    const muteBtn = document.getElementById('muteBtn');
+    if (muteBtn && window.chatApp) updateMuteButtonUI(muteBtn, window.chatApp.isMuted);
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await checkLogin();
+
+    let trigger = document.getElementById('userMenuTrigger');
+    let dropdown = document.getElementById('userDropdown');
+    if (trigger) {
+        trigger.onclick = (e) => { e.stopPropagation(); dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block'; };
+        document.onclick = () => dropdown.style.display = 'none';
+    }
+
+    document.getElementById('settingsBtn').onclick = async () => {
+        dropdown.style.display = 'none';
+        await loadSettings();
+        document.getElementById('settingsModal').style.display = 'flex';
+    };
+    document.getElementById('closeSettingsModal').onclick = () => document.getElementById('settingsModal').style.display = 'none';
+    document.getElementById('cancelSettings').onclick = () => document.getElementById('settingsModal').style.display = 'none';
+    document.getElementById('saveSettings').onclick = saveSettings;
+
+    document.getElementById('uploadAvatarBtn').onclick = () => document.getElementById('avatarUpload').click();
+    document.getElementById('avatarUpload').onchange = (e) => {
+        if (e.target.files && e.target.files[0]) uploadAvatar(e.target.files[0]);
+        e.target.value = '';
+    };
+
+    document.getElementById('changePasswordBtn').onclick = () => {
+        document.getElementById('settingsModal').style.display = 'none';
+        document.getElementById('passwordModal').style.display = 'flex';
+        document.getElementById('oldPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmNewPassword').value = '';
+    };
+    document.getElementById('closePasswordModal').onclick = () => document.getElementById('passwordModal').style.display = 'none';
+    document.getElementById('cancelPassword').onclick = () => document.getElementById('passwordModal').style.display = 'none';
+    document.getElementById('savePassword').onclick = changePassword;
+
+    document.getElementById('logoutBtn').onclick = logout;
+
+    let isMuted = await loadMuteStatusFromDB();
+    let muteBtn = document.getElementById('muteBtn');
+    updateMuteButtonUI(muteBtn, isMuted);
+    const waitForChatApp = setInterval(() => {
+        if (window.chatApp) {
+            window.chatApp.isMuted = isMuted;
+            if (window.chatApp.currentAudio) window.chatApp.currentAudio.muted = isMuted;
+            if (window.chatApp.gainNode) window.chatApp.gainNode.gain.value = isMuted ? 0 : 1;
+            clearInterval(waitForChatApp);
+        }
+    }, 100);
+    muteBtn.onclick = async () => {
+        isMuted = !isMuted;
+        updateMuteButtonUI(muteBtn, isMuted);
+        if (window.chatApp) {
+            window.chatApp.isMuted = isMuted;
+            if (window.chatApp.currentAudio) window.chatApp.currentAudio.muted = isMuted;
+            if (window.chatApp.gainNode) window.chatApp.gainNode.gain.value = isMuted ? 0 : 1;
+        }
+        await saveMuteStatusToDB(isMuted);
+    };
+});
+</script>
+</body>
+</html>

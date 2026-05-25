@@ -1,0 +1,115 @@
+{
+  "cached_at": "2026-05-04T21:23:28.264852",
+  "value": [
+    {
+      "id": "b62005a3-d321-4365-851c-7625f380aad2",
+      "username": "jj",
+      "nickname": "jj",
+      "phone": "18280579419",
+      "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=jj",
+      "conv_count": 2,
+      "msg_count": 4,
+      "date_joined": "2026-05-01 11:20",
+      "last_login": "2026-05-01 11:20"
+    },
+    {
+      "id": "3fd34342-ed50-4439-8a58-54fef278b9ca",
+      "username": "user_077296",
+      "nickname": "我嘞个骚刚",
+      "phone": "15982077296",
+      "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=user_077296",
+      "conv_count": 1,
+      "msg_count": 2,
+      "date_joined": "2026-04-30 20:01",
+      "last_login": "2026-04-30 20:01"
+    },
+    {
+      "id": "62357873-af5b-440e-bf11-ef03ec470506",
+      "username": "y3",
+      "nickname": "y3",
+      "phone": "15662162277",
+      "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=y3",
+      "conv_count": 1,
+      "msg_count": 2,
+      "date_joined": "2026-04-29 20:57",
+      "last_login": "2026-04-29 20:57"
+    },
+    {
+      "id": "c98d3aef-1f21-4822-a438-1da41ef1bab1",
+      "username": "user_077298",
+      "nickname": "用户7298",
+      "phone": "15982077298",
+      "avatar_url": "/media/avatars/ca17b569df414b4aa4b5c4ac77ababad_1777525261.png",
+      "conv_count": 4,
+      "msg_count": 16,
+      "date_joined": "2026-04-29 20:53",
+      "last_login": "2026-04-30 12:36"
+    },
+    {
+      "id": "96b0eb0f-bc3b-440c-abb8-16a804a13017",
+      "username": "HHHHHHHHHHHHHHHH",
+      "nickname": "HHHHHHHHHHHHHHHH",
+      "phone": "18884599949",
+      "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=HHHHHHHHHHHHHHHH",
+      "conv_count": 1,
+      "msg_count": 2,
+      "date_joined": "2026-04-29 18:14",
+      "last_login": "2026-04-29 18:14"
+    },
+    {
+      "id": "6a0eb9dd-bf41-4908-953d-8a17bd5f4bd0",
+      "username": "小鱼",
+      "nickname": "小鱼",
+      "phone": "18884823400",
+      "avatar_url": "https://api.dicebear.com/7.x/avataaars/svg?seed=小鱼",
+      "conv_count": 34,
+      "msg_count": 90,
+      "date_joined": "2026-04-29 05:51",
+      "last_login": "2026-04-30 08:38"
+    },
+    {
+      "id": "c79da8ea-5571-448f-aaa4-78f4979f4015",
+      "username": "zjj",
+      "nickname": "zjj",
+      "phone": "17882933550",
+      "avatar_url": "/media/avatars/60a5db34d674455ab14bff65717895f4_1777508862.jpeg",
+      "conv_count": 11,
+      "msg_count": 58,
+      "date_joined": "2026-04-29 03:41",
+      "last_login": "2026-05-01 10:00"
+    },
+    {
+      "id": "1286c434-e1bf-42de-9d24-89342f5e7bc7",
+      "username": "user_128260",
+      "nickname": "用户8260",
+      "phone": "17738128260",
+      "avatar_url": "/media/avatars/0928d060aa9a45d6957c81ac1a11c7fb_1777464133.jpg",
+      "conv_count": 15,
+      "msg_count": 50,
+      "date_joined": "2026-04-29 03:03",
+      "last_login": "2026-04-29 18:38"
+    },
+    {
+      "id": "e3c4e866-bfda-44ee-b828-5d89f5759610",
+      "username": "zhangxuefeng",
+      "nickname": "管理员",
+      "phone": "zhangxuefeng",
+      "avatar_url": "/media/avatars/zhangxuefeng.png",
+      "conv_count": 0,
+      "msg_count": 0,
+      "date_joined": "2026-04-29 02:09",
+      "last_login": "2026-04-29 03:16"
+    },
+    {
+      "id": "4177e3b1-0472-49ac-b11f-905aa27760b9",
+      "username": "王八蛋",
+      "nickname": "王八蛋",
+      "phone": "17735203032",
+      "avatar_url": "/media/avatars/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE_2025-12-21_181012.png",
+      "conv_count": 1,
+      "msg_count": 2,
+      "date_joined": "2026-04-29 01:44",
+      "last_login": "2026-04-29 01:44"
+    }
+  ]
+}

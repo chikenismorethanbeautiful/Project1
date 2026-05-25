@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>加载中...</title>
+    <script>
+        const width = window.innerWidth;
+        let device = 'desktop';
+        if (width <= 768) {
+            device = 'mobile';
+        } else if (width <= 1024) {
+            device = 'tablet';
+        } else {
+            device = 'desktop';
+        }
+        // 设置 cookie 并跳转到首页带上参数
+        document.cookie = `device=${device}; path=/; max-age=${365*24*3600}`;
+        window.location.href = '/?device=' + device;
+    </script>
+</head>
+<body>Loading...</body>
+</html>

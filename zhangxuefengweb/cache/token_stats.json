@@ -1,0 +1,47 @@
+{
+  "cached_at": "2026-05-04T21:25:43.792074",
+  "value": {
+    "success": true,
+    "total_tokens": 63748,
+    "total_chars": 95623,
+    "total_messages": 226,
+    "daily_stats": [
+      {
+        "date": "04-28",
+        "messages": 0,
+        "tokens": 0
+      },
+      {
+        "date": "04-29",
+        "messages": 78,
+        "tokens": 18950
+      },
+      {
+        "date": "04-30",
+        "messages": 16,
+        "tokens": 3490
+      },
+      {
+        "date": "05-01",
+        "messages": 16,
+        "tokens": 6694
+      },
+      {
+        "date": "05-02",
+        "messages": 20,
+        "tokens": 5520
+      },
+      {
+        "date": "05-03",
+        "messages": 24,
+        "tokens": 7816
+      },
+      {
+        "date": "05-04",
+        "messages": 72,
+        "tokens": 21278
+      }
+    ],
+    "avg_per_message": 282
+  }
+}

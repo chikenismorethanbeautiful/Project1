@@ -1,0 +1,203 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>峰学未来 · 高考志愿AI助手</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+    <style>
+        /* 平板端专用样式 */
+        body {
+            padding-top: 64px !important;
+            background: #f8fafc;
+        }
+
+        /* 平板端侧边栏宽度调整 */
+        .sidebar {
+            width: 260px;
+            transition: transform 0.3s ease;
+        }
+
+        /* 平板端消息最大宽度 */
+        .message {
+            max-width: 85%;
+        }
+
+        /* 平板端快捷回复区域 */
+        .quick-replies {
+            overflow-x: auto;
+            padding: 10px 16px;
+        }
+
+        /* 平板端功能栏 */
+        .action-toolbar {
+            padding: 10px 16px;
+        }
+
+        /* 平板端菜单按钮（默认隐藏，需要时可通过JS显示） */
+        .tablet-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 72px;
+            left: 16px;
+            z-index: 150;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            color: white;
+            font-size: 22px;
+            padding: 8px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        /* 小平板（小于900px）适配 */
+        @media (max-width: 900px) {
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 64px;
+                height: calc(100% - 64px);
+                transform: translateX(-100%);
+                z-index: 200;
+                background: rgba(30, 30, 47, 0.98);
+                backdrop-filter: blur(12px);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .tablet-menu-toggle {
+                display: block;
+            }
+            .main-chat {
+                margin-left: 0;
+                width: 100%;
+            }
+            .chat-messages {
+                padding: 16px;
+            }
+        }
+
+        /* 大平板（901px-1024px）保持侧边栏可见 */
+        @media (min-width: 901px) and (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            .message {
+                max-width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'components/navbar.html' %}
+
+    <!-- 平板端菜单按钮（仅在小屏幕显示） -->
+    <button class="tablet-menu-toggle" id="tabletMenuToggle">☰</button>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>对话历史</h2>
+            <button class="new-chat-btn" id="newChatBtn">+ 新建对话</button>
+        </div>
+        <div class="conversation-list" id="conversationList">
+            {% for conv in conversations %}
+            <div class="conv-item" data-id="{{ conv.session_id }}">
+                <div class="conv-title">{{ conv.title }}</div>
+                <div class="conv-time">{{ conv.updated_at|date:"m-d H:i" }}</div>
+                <span class="conv-delete" data-id="{{ conv.session_id }}">🗑️</span>
+            </div>
+            {% empty %}
+            <div class="empty-conversations">✨ 暂无对话记录</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="main-chat">
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="avatar">
+                    <img src="{% static 'images/zhangxuefeng.png' %}" alt="张雪峰">
+                </div>
+                <div class="bubble">
+                    <strong>✨ 你好呀！我是张雪峰</strong><br><br>
+                    用我的风格帮你分析高考志愿：<br>
+                    📍 分数能上什么大学？<br>
+                    📍 专业前景怎么样？<br>
+                    📍 城市怎么选？<br><br>
+                    开整！🚀
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-replies" id="quickReplies">
+            <div class="quick-reply-chip" data-msg="四川460分能上什么大学">🎓 460分能上什么大学</div>
+            <div class="quick-reply-chip" data-msg="清华大学录取分数线">🏫 清华分数线</div>
+            <div class="quick-reply-chip" data-msg="计算机专业排名">💻 计算机排名</div>
+            <div class="quick-reply-chip" data-msg="985大学有哪些">🏆 985大学</div>
+            <div class="quick-reply-chip" data-msg="张雪峰老师，一路走好，感谢您为中国教育事业做出的贡献">🕯️ 为张老师哀悼</div>
+        </div>
+
+        <div class="action-toolbar">
+            <button class="func-btn" id="uploadImageBtn">📷 上传图片识别</button>
+        </div>
+
+        <div id="imagePreviewContainer" class="image-preview-container">
+            <div class="image-preview-content">
+                <img id="imagePreview" class="image-preview-img" src="">
+                <div>
+                    <div id="imageTextPreview" class="image-preview-text"></div>
+                    <button id="removeImageBtn" class="remove-image-btn">移除图片</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="messageInput" placeholder="输入你的问题...">
+            <button class="send-btn" id="sendBtn">➤</button>
+        </div>
+    </div>
+
+    <script src="{% static 'js/chat.js' %}"></script>
+    <script>
+        // 平板端菜单切换逻辑
+        const tabletMenuToggle = document.getElementById('tabletMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+
+        if (tabletMenuToggle && window.innerWidth <= 900) {
+            tabletMenuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                sidebar.classList.toggle('open');
+            });
+
+            // 点击内容区域关闭侧边栏
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 900) {
+                    if (!sidebar.contains(e.target) && !tabletMenuToggle.contains(e.target)) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            });
+        }
+
+        // 监听窗口大小变化
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 900) {
+                sidebar.classList.remove('open');
+                if (tabletMenuToggle) tabletMenuToggle.style.display = 'none';
+            } else {
+                if (tabletMenuToggle) tabletMenuToggle.style.display = 'block';
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof ChatApp !== 'undefined') {
+                window.chatApp = new ChatApp();
+            }
+        });
+    </script>
+</body>
+</html>

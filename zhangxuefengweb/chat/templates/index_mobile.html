@@ -1,0 +1,178 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>峰学未来 · 高考志愿AI助手</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <!-- 更换为更完整的主题：atom-one-dark，所有代码文字均有高亮 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/chat.css' %}">
+    <style>
+        /* 手机端专用样式（保持不变） */
+        body {
+            padding-top: 56px !important;
+            background: #f8fafc;
+        }
+        .sidebar {
+            position: fixed;
+            left: -85%;
+            top: 56px;
+            width: 85%;
+            height: calc(100% - 56px);
+            transition: left 0.3s ease;
+            z-index: 200;
+            background: rgba(30, 30, 47, 0.98);
+            backdrop-filter: blur(12px);
+        }
+        .sidebar.open {
+            left: 0;
+        }
+        .mobile-menu-toggle {
+            display: block;
+            position: fixed;
+            top: 11px;
+            left: 12px;
+            z-index: 150;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 22px;
+            padding: 8px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            backdrop-filter: blur(4px);
+            line-height: 1;
+        }
+        .main-chat {
+            margin-left: 0;
+            width: 100%;
+        }
+        .chat-messages {
+            padding: 12px;
+            padding-top: 8px;
+        }
+        .message {
+            max-width: 90%;
+        }
+        .quick-replies {
+            overflow-x: auto;
+            padding: 8px 12px;
+        }
+        .action-toolbar {
+            padding: 8px 12px;
+            flex-wrap: wrap;
+        }
+        .chat-input-area {
+            padding: 12px;
+        }
+        .chat-input-area input {
+            padding: 12px 16px;
+        }
+        .send-btn {
+            width: 48px;
+            height: 48px;
+        }
+        .brand-text {
+            display: none;
+        }
+        @media (max-width: 480px) {
+            .mobile-menu-toggle {
+                top: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% include 'components/navbar.html' %}
+
+    <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>对话历史</h2>
+            <button class="new-chat-btn" id="newChatBtn">+ 新建对话</button>
+        </div>
+        <div class="conversation-list" id="conversationList">
+            {% for conv in conversations %}
+            <div class="conv-item" data-id="{{ conv.session_id }}">
+                <div class="conv-title">{{ conv.title }}</div>
+                <div class="conv-time">{{ conv.updated_at|date:"m-d H:i" }}</div>
+                <span class="conv-delete" data-id="{{ conv.session_id }}">🗑️</span>
+            </div>
+            {% empty %}
+            <div class="empty-conversations">✨ 暂无对话记录</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="main-chat">
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="avatar">
+                    <img src="{% static 'images/zhangxuefeng.png' %}" alt="张雪峰">
+                </div>
+                <div class="bubble">
+                    <strong>✨ 你好呀！我是张雪峰</strong><br><br>
+                    用我的风格帮你分析高考志愿：<br>
+                    📍 分数能上什么大学？<br>
+                    📍 专业前景怎么样？<br>
+                    📍 城市怎么选？<br><br>
+                    开整！🚀
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-replies" id="quickReplies">
+            <div class="quick-reply-chip" data-msg="四川460分能上什么大学">🎓 460分能上什么大学</div>
+            <div class="quick-reply-chip" data-msg="清华大学录取分数线">🏫 清华分数线</div>
+            <div class="quick-reply-chip" data-msg="计算机专业排名">💻 计算机排名</div>
+            <div class="quick-reply-chip" data-msg="985大学有哪些">🏆 985大学</div>
+            <div class="quick-reply-chip" data-msg="张雪峰老师，一路走好，感谢您为中国教育事业做出的贡献">🕯️ 为张老师哀悼</div>
+        </div>
+
+        <div class="action-toolbar">
+            <button class="func-btn" id="uploadImageBtn">📷 上传图片识别</button>
+        </div>
+
+        <div id="imagePreviewContainer" class="image-preview-container">
+            <div class="image-preview-content">
+                <img id="imagePreview" class="image-preview-img" src="">
+                <div>
+                    <div id="imageTextPreview" class="image-preview-text"></div>
+                    <button id="removeImageBtn" class="remove-image-btn">移除图片</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-area">
+            <input type="text" id="messageInput" placeholder="输入你的问题...">
+            <button class="send-btn" id="sendBtn">➤</button>
+        </div>
+    </div>
+
+    <script src="{% static 'js/chat.js' %}"></script>
+    <script>
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                sidebar.classList.toggle('open');
+            });
+            document.addEventListener('click', (e) => {
+                if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof ChatApp !== 'undefined') {
+                window.chatApp = new ChatApp();
+            }
+        });
+    </script>
+</body>
+</html>

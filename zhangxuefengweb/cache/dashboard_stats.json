@@ -1,0 +1,108 @@
+{
+  "cached_at": "2026-05-04T21:23:28.719873",
+  "value": {
+    "success": true,
+    "users": {
+      "total": 10,
+      "today": 0,
+      "week": 10
+    },
+    "conversations": {
+      "total": 70,
+      "today": 26,
+      "avg_messages": 3.2
+    },
+    "messages": {
+      "total": 226,
+      "today": 72,
+      "user": 113,
+      "assistant": 113
+    },
+    "trend": [
+      {
+        "date": "04-28",
+        "count": 0
+      },
+      {
+        "date": "04-29",
+        "count": 25
+      },
+      {
+        "date": "04-30",
+        "count": 4
+      },
+      {
+        "date": "05-01",
+        "count": 4
+      },
+      {
+        "date": "05-02",
+        "count": 2
+      },
+      {
+        "date": "05-03",
+        "count": 9
+      },
+      {
+        "date": "05-04",
+        "count": 26
+      }
+    ],
+    "active_users": [
+      {
+        "id": "6a0eb9dd-bf41-4908-953d-8a17bd5f4bd0",
+        "username": "小鱼",
+        "nickname": "小鱼",
+        "conv_count": 34
+      },
+      {
+        "id": "1286c434-e1bf-42de-9d24-89342f5e7bc7",
+        "username": "user_128260",
+        "nickname": "用户8260",
+        "conv_count": 15
+      },
+      {
+        "id": "c79da8ea-5571-448f-aaa4-78f4979f4015",
+        "username": "zjj",
+        "nickname": "zjj",
+        "conv_count": 11
+      },
+      {
+        "id": "c98d3aef-1f21-4822-a438-1da41ef1bab1",
+        "username": "user_077298",
+        "nickname": "用户7298",
+        "conv_count": 4
+      },
+      {
+        "id": "b62005a3-d321-4365-851c-7625f380aad2",
+        "username": "jj",
+        "nickname": "jj",
+        "conv_count": 2
+      },
+      {
+        "id": "3fd34342-ed50-4439-8a58-54fef278b9ca",
+        "username": "user_077296",
+        "nickname": "我嘞个骚刚",
+        "conv_count": 1
+      },
+      {
+        "id": "4177e3b1-0472-49ac-b11f-905aa27760b9",
+        "username": "王八蛋",
+        "nickname": "王八蛋",
+        "conv_count": 1
+      },
+      {
+        "id": "62357873-af5b-440e-bf11-ef03ec470506",
+        "username": "y3",
+        "nickname": "y3",
+        "conv_count": 1
+      },
+      {
+        "id": "96b0eb0f-bc3b-440c-abb8-16a804a13017",
+        "username": "HHHHHHHHHHHHHHHH",
+        "nickname": "HHHHHHHHHHHHHHHH",
+        "conv_count": 1
+      }
+    ]
+  }
+}
